@@ -5,6 +5,6 @@
 - yarn
 - `mv .env.example .env`
 - Populate .env
-- node index.js <tx hash>
+- `node index <tx hash>`
 
 ![Image Description](example.png)
