@@ -1,0 +1,10 @@
+{
+  "name": "perps-events-decoder",
+  "type": "module",
+  "packageManager": "yarn@3.5.1",
+  "dependencies": {
+    "dotenv-safe": "^8.2.0",
+    "ethers": "^5.5.4",
+    "ololog": "^1.1.175"
+  }
+}
