@@ -1,10 +1,11 @@
 import dotenv from "dotenv-safe";
 dotenv.config();
 import { abi as kwentaAccountAbi } from "./abi/kwenta.js";
+import { eventsAbi } from "./abi/events.js";
 import { pythAbi } from "./abi/pyth.js";
 import { snxAbis } from "./abi/all-snx-contracts.js";
 import { ethers, utils, BigNumber } from "ethers";
-import log from "ololog";
+import logger from "ololog";
 
 utils.Logger.setLogLevel("OFF"); // turn ethers.js logging off, duplicate definition in abis are annoying
 
@@ -13,7 +14,7 @@ const provider = new ethers.providers.InfuraProvider(
   process.env.INFURA_KEY
 );
 async function getTransactionReceiptEvents(txHash) {
-  log(`Looking up events for txHash ${txHash}`);
+  logger(`Looking up events for txHash ${txHash}`);
 
   // Get transaction receipt
   let txReceipt = await provider.getTransactionReceipt(txHash);
@@ -21,7 +22,7 @@ async function getTransactionReceiptEvents(txHash) {
   if (txReceipt && txReceipt.logs) {
     // Create a new Interface with the contract ABI
     let contractInterface = new utils.Interface(
-      snxAbis.concat(kwentaAccountAbi).concat(pythAbi)
+      snxAbis.concat(kwentaAccountAbi).concat(pythAbi).concat(eventsAbi)
     );
 
     // Parse the log data from the transaction receipt
@@ -36,11 +37,11 @@ async function getTransactionReceiptEvents(txHash) {
         );
         return { ...parsed, args };
       } catch (error) {
-        throw Error("Failed to parse log");
+        logger(error);
       }
     });
 
-    log(parsedLogs);
+    logger(parsedLogs);
     console.table(parsedLogs);
   }
 }
